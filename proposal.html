@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puzzle Proposal Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            padding: 20px;
+            overflow: hidden; /* Prevent scrollbars from popping up */
+        }
+        #puzzle {
+            display: none;
+        }
+        #message {
+            margin-top: 20px;
+            font-size: 1.5em;
+            color: #4CAF50;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 1em;
+            border: none;
+            cursor: pointer;
+        }
+        #yes {
+            background-color: #4CAF50;
+            color: white;
+        }
+        #no {
+            background-color: #f44336;
+            color: white;
+        }
+        .riddle {
+            display: none;
+        }
+        .hint {
+            display: none;
+            color: #f39c12;
+            margin-top: 10px;
+        }
+        #present {
+            width: 100px;
+            height: 100px;
+            background-color: #FFB300; /* Gold color */
+            margin: 0 auto;
+            position: relative;
+            cursor: pointer;
+            display: none; /* Initially hidden */
+        }
+        #present:after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 20px;
+            background-color: red; /* Ribbon color */
+            top: 40px;
+            left: 0;
+        }
+        #celebration {
+            display: none;
+            font-size: 2em;
+            color: #FF6347; /* Tomato color */
+            margin-top: 30px;
+        }
+        .party-popper {
+            width: 50px;
+            height: 50px;
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: pop 1s forwards;
+            opacity: 1;
+        }
+        @keyframes pop {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-100px); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Puzzle Game!</h1>
+    <p>Can you solve the riddles to see the present?</p>
+    
+    <div id="puzzle">
+        <div class="riddle" id="riddle1">
+            <h2>Riddle 1: What is the another name of Yuki?</h2>
+            <input type="text" id="answer1" placeholder="Type your answer here">
+            <button onclick="checkAnswer(1)">Submit</button>
+            <button onclick="showHint(1)">Hint</button>
+            <div class="hint" id="hint1">Hint: Nokou</div>
+        </div>
+        <div class="riddle" id="riddle2">
+            <h2>Riddle 2: What is something that grows stronger with time?</h2>
+            <input type="text" id="answer2" placeholder="Type your answer here">
+            <button onclick="checkAnswer(2)">Submit</button>
+            <button onclick="showHint(2)">Hint</button>
+            <div class="hint" id="hint2">Hint: It's the foundation of relationships.</div>
+        </div>
+        <div class="riddle" id="riddle3">
+            <h2>Riddle 3: What name did I save for you in my phone?</h2>
+            <input type="text" id="answer3" placeholder="Type your answer here">
+            <button onclick="checkAnswer(3)">Submit</button>
+            <button onclick="showHint(3)">Hint</button>
+            <div class="hint" id="hint3">Hint: Puali jaan r beleg naam.</div>
+        </div>
+    </div>
+
+    <div id="present" onclick="openPresent()"></div>
+    <div id="message"></div>
+    <div id="celebration">🎉 Congratulations! 🎉</div>
+
+    <script>
+        let currentRiddle = 1;
+        const answers = ["dogesh", "love", "dhunu"]; // Answers to the riddles
+
+        // Show the puzzle after a short delay
+        setTimeout(() => {
+            document.getElementById("puzzle").style.display = "block";
+            document.getElementById("riddle1").style.display = "block"; // Show the first riddle
+        }, 2000); // 2 seconds delay
+
+        function checkAnswer(riddleNumber) {
+            const userAnswer = document.getElementById(`answer${riddleNumber}`).value.toLowerCase();
+            const messageDiv = document.getElementById("message");
+
+            if (userAnswer === answers[riddleNumber - 1]) {
+                messageDiv.innerHTML = `Correct! Now onto the next riddle.`;
+                document.getElementById(`riddle${riddleNumber}`).style.display = "none"; // Hide the current riddle
+                
+                if (riddleNumber < answers.length) {
+                    currentRiddle++;
+                    document.getElementById(`riddle${currentRiddle}`).style.display = "block"; // Show next riddle
+                } else {
+                    showPresent();
+                }
+            } else {
+                messageDiv.innerHTML = "Try again!";
+            }
+        }
+
+        function showHint(riddleNumber) {
+            document.getElementById(`hint${riddleNumber}`).style.display = "block"; // Show the hint for the current riddle
+        }
+
+        function showPresent() {
+            const presentDiv = document.getElementById("present");
+            presentDiv.style.display = "block"; // Show the present box
+            document.getElementById("message").innerHTML = "You solved all the riddles! Click the present to see your surprise.";
+        }
+
+        function openPresent() {
+            const presentDiv = document.getElementById("present");
+            presentDiv.style.display = "none"; // Hide the present box
+            showProposal();
+        }
+
+        function showProposal() {
+            const messageDiv = document.getElementById("message");
+            messageDiv.innerHTML = "Will you be my girlfriend, Puali jaan?";
+            showButtons();
+        }
+
+        function showButtons() {
+            const yesButton = document.createElement("button");
+            yesButton.innerHTML = "Yes";
+            yesButton.id = "yes";
+            yesButton.onclick = () => { 
+                showCelebration(); // Show celebration effects
+                messageDiv.innerHTML = "Yey, You are mine now, jaan!"; 
+                yesButton.remove(); // Remove Yes button
+                noButton.remove(); // Remove No button
+            };
+
+            const noButton = document.createElement("button");
+            noButton.innerHTML = "No";
+            noButton.id = "no";
+            noButton.onclick = () => { 
+                alert("Are you sure? Let's think about it again!"); 
+            };
+
+            document.body.appendChild(yesButton);
+            document.body.appendChild(noButton);
+        }
+
+        function showCelebration() {
+            // Create party poppers
+            for (let i = 0; i < 5; i++) {
+                const popper = document.createElement("img");
+                popper.src = "https://img.icons8.com/emoji/48/party-popper.png"; // Party popper emoji image
+                popper.className = "party-popper";
+                popper.style.left = `${Math.random() * 100}vw`; // Random horizontal position
+                document.body.appendChild(popper);
+                setTimeout(() => {
+                    popper.remove(); // Remove the popper after animation
+                }, 1000); // Adjust timing as needed
+            }
+        }
+    </script>
+</body>
+</html>
